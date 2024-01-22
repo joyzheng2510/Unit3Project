@@ -3,6 +3,7 @@ import java.awt.event.*;
 import javax.swing.*;
 import java.io.*;
 import java.util.*;
+import java.text.*;
 
 public class Main implements ActionListener {
   private static JLabel instructions;
@@ -43,38 +44,38 @@ public class Main implements ActionListener {
   private static void placeComponents(JPanel panel) {
     panel.setLayout(null);
 
-    instructions = new JLabel("<html>To make a to-do entry, enter the date and task below. To delete a task, enter in the date and task of the entry you want to delete.</html>");
-    instructions.setBounds(10, 10, 500, 90);
+    instructions = new JLabel("<html>To make a to-do entry, enter the date and task below. <br><font color='red'>**MAKE SURE SINGLE DIGITS ARE PRECEDED BY A ZERO. </font><br>To delete a task, enter in the date and task of the entry you want to delete.</html>");
+    instructions.setBounds(10, 5, 500, 90);
     instructions.setVerticalAlignment(JLabel.TOP);
     panel.add(instructions);
     
     dateLabel = new JLabel("Date to be completed: MM/DD/YYYY");
-    dateLabel.setBounds(10,50,300,25);
+    dateLabel.setBounds(10,70,300,25);
     panel.add(dateLabel);
 
     slash = new JLabel("       /         /");
-    slash.setBounds(10,80,300,25);
+    slash.setBounds(10,100,300,25);
     panel.add(slash);
     monthField = new JTextField(10);
-    monthField.setBounds(10,80,25,25);
+    monthField.setBounds(10,100,25,25);
     panel.add(monthField);
     dayField = new JTextField(10);
-    dayField.setBounds(50,80,25,25);
+    dayField.setBounds(50,100,25,25);
     panel.add(dayField);
     yearField = new JTextField(10);
-    yearField.setBounds(90,80,40,25);
+    yearField.setBounds(90,100,40,25);
     panel.add(yearField);
 
     taskLabel = new JLabel("Task to be completed");
-    taskLabel.setBounds(10,110,200,25);
+    taskLabel.setBounds(10,130,200,25);
     panel.add(taskLabel);
 
     taskEnter = new JTextField(20);
-    taskEnter.setBounds(10,140,200,25);
+    taskEnter.setBounds(10,160,200,25);
     panel.add(taskEnter);
 
     enterData = new JButton("Enter");
-    enterData.setBounds(10, 170, 80, 25);
+    enterData.setBounds(10, 190, 80, 25);
     enterData.addActionListener(
       new ActionListener(){
         public void actionPerformed(ActionEvent e){
@@ -88,7 +89,7 @@ public class Main implements ActionListener {
     panel.add(enterData);
     
     deleteButton = new JButton("Delete");
-    deleteButton.setBounds(100, 170, 110, 25);
+    deleteButton.setBounds(100, 190, 110, 25);
     deleteButton.addActionListener(
       new ActionListener(){
         public void actionPerformed(ActionEvent e){
@@ -119,7 +120,7 @@ public class Main implements ActionListener {
     panel.add(deleteButton);
     
     list = new JLabel("");
-    list.setBounds(10,200,300,200);
+    list.setBounds(10,220,300,200);
     list.setVerticalAlignment(JLabel.TOP);
     panel.add(list);
   }
@@ -129,24 +130,25 @@ public class Main implements ActionListener {
     
   }
   
-  public static void printOut(){
+  public static void printOut() {
     try {
       File file = new File("data.txt");
       Scanner scan = new Scanner(file);
-      if (!(file.length()==0)) {
+      if (!(file.length() == 0)) {
         ArrayList<String> tempList = new ArrayList<>();
-        while (scan.hasNextLine()){
+        while (scan.hasNextLine()) {
           String data = scan.nextLine();
           ArrayList<String> dataArray = new ArrayList<>(Arrays.asList(data.split(",")));
           String month = dataArray.get(0);
           String day = dataArray.get(1);
           String year = dataArray.get(2);
           String task = dataArray.get(3);
-          tempList.add(month+"/"+day+"/"+year+": "+task.trim());
+          tempList.add(year + month + day + ": " + task.trim());
         }
         Collections.sort(tempList);
         for (String item : tempList) {
-          listItems += item + "<br>";
+          String formattedDate = item.substring(4, 6) + "/" + item.substring(6, 8) + "/" + item.substring(0, 4);
+          listItems += formattedDate + ": " + item.substring(10) + "<br>";
         }
         list.setText("<html>" + listItems + "</html>");
       }
@@ -162,21 +164,24 @@ public class Main implements ActionListener {
       File file = new File("data.txt");
       Scanner scan = new Scanner(file);
       listItems = "";
-      ArrayList<String> tempList = new ArrayList<>();
-      while (scan.hasNextLine()){
-        String data = scan.nextLine();
-        ArrayList<String> dataArray = new ArrayList<>(Arrays.asList(data.split(",")));
-        String month = dataArray.get(0);
-        String day = dataArray.get(1);
-        String year = dataArray.get(2);
-        String task = dataArray.get(3);
-        tempList.add(month+"/"+day+"/"+year+": "+task.trim());
+      if (!(file.length() == 0)) {
+        ArrayList<String> tempList = new ArrayList<>();
+        while (scan.hasNextLine()) {
+          String data = scan.nextLine();
+          ArrayList<String> dataArray = new ArrayList<>(Arrays.asList(data.split(",")));
+          String month = dataArray.get(0);
+          String day = dataArray.get(1);
+          String year = dataArray.get(2);
+          String task = dataArray.get(3);
+          tempList.add(year + month + day + ": " + task.trim());
+        }
+        Collections.sort(tempList);
+        for (String item : tempList) {
+          String formattedDate = item.substring(4, 6) + "/" + item.substring(6, 8) + "/" + item.substring(0, 4);
+          listItems += formattedDate + ": " + item.substring(10) + "<br>";
+        }
+        list.setText("<html>" + listItems + "</html>");
       }
-      Collections.sort(tempList);
-      for (String item : tempList) {
-        listItems += item + "<br>";
-      }
-      list.setText("<html>" + listItems + "</html>");
       scan.close();
     } catch (FileNotFoundException e) {
       System.out.println("An error occurred.");
