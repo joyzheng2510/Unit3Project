@@ -27,6 +27,16 @@ public class Main implements ActionListener {
     placeComponents(panel);
     frame.setVisible(true);
 
+    File file = new File("data.txt");
+    if (!(file.exists())) {
+      try {
+        file.createNewFile();
+      }
+      catch (IOException e) {
+        e.printStackTrace();
+      }
+    }
+    
     printOut();
   }
 
@@ -182,6 +192,6 @@ public class Main implements ActionListener {
     }
     catch(IOException e){
       e.printStackTrace();
-    }
+    } 
   }
 }
