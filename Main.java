@@ -10,7 +10,9 @@ public class Main implements ActionListener {
   private static JTextField monthField;
   private static JTextField dayField;
   private static JTextField yearField;
+  private static JLabel formatError;
   private static JLabel taskLabel;
+  private static JLabel noTask;
   private static JTextField taskEnter;
   private static JLabel list;
   private static JButton enterData;
@@ -18,7 +20,7 @@ public class Main implements ActionListener {
   static String listItems = "";
   public static void main(String[] args) {    
     JFrame frame = new JFrame("To-do List");
-    frame.setSize(500, 400);
+    frame.setSize(500, 600);
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
     JPanel panel = new JPanel();    
@@ -64,6 +66,10 @@ public class Main implements ActionListener {
     yearField.setBounds(90,100,40,25);
     panel.add(yearField);
 
+    formatError = new JLabel("");
+    formatError.setBounds(140,100,350,25);
+    panel.add(formatError);
+
     taskLabel = new JLabel("Task to be completed");
     taskLabel.setBounds(10,130,200,25);
     panel.add(taskLabel);
@@ -72,15 +78,32 @@ public class Main implements ActionListener {
     taskEnter.setBounds(10,160,200,25);
     panel.add(taskEnter);
 
+    noTask = new JLabel("");
+    noTask.setBounds(220,160,200,25);
+    panel.add(noTask);
+
     enterData = new JButton("Enter");
     enterData.setBounds(10, 190, 80, 25);
     enterData.addActionListener(
       new ActionListener(){
         public void actionPerformed(ActionEvent e){
           String data = monthField.getText()+","+dayField.getText()+","+yearField.getText()+","+taskEnter.getText().trim();
-          writeToFile(data);
 
-          append();
+          if(monthField.getText().length()==2 && dayField.getText().length()==2 && yearField.getText().length()==4 && taskEnter.getText().length()>0){
+            writeToFile(data);
+            append();
+            formatError.setText("");
+            noTask.setText("");
+          } else if(!(monthField.getText().length()==2 || dayField.getText().length()==2 || yearField.getText().length()==4) && taskEnter.getText().length()>0) {
+            formatError.setText("Please enter the date in the correct format.");
+            noTask.setText("");
+          } else if(!(monthField.getText().length()==2 || dayField.getText().length()==2 || yearField.getText().length()==4 && taskEnter.getText().length()>0)) {
+            formatError.setText("Please enter the date in the correct format.");
+            noTask.setText("Please enter a task.");
+          } else if(!(taskEnter.getText().length()>0)){
+            formatError.setText("");
+            noTask.setText("Please enter a task.");
+          } 
         }
       }
     );
@@ -111,7 +134,20 @@ public class Main implements ActionListener {
           } catch (IOException e1) {
             e1.printStackTrace();
           }
-          append();
+          if(monthField.getText().length()==2 && dayField.getText().length()==2 && yearField.getText().length()==4 && taskEnter.getText().length()>0){
+            append();
+            formatError.setText("");
+            noTask.setText("");
+          } else if(!(monthField.getText().length()==2 || dayField.getText().length()==2 || yearField.getText().length()==4) && taskEnter.getText().length()>0) {
+            formatError.setText("Please enter the date in the correct format.");
+            noTask.setText("");
+          } else if(!(monthField.getText().length()==2 || dayField.getText().length()==2 || yearField.getText().length()==4 && taskEnter.getText().length()>0)) {
+            formatError.setText("Please enter the date in the correct format.");
+            noTask.setText("Please enter a task.");
+          } else if(!(taskEnter.getText().length()>0)){
+            formatError.setText("");
+            noTask.setText("Please enter a task.");
+          } 
         }
       }
     );
