@@ -1,9 +1,7 @@
-import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import java.io.*;
 import java.util.*;
-import java.text.*;
 
 public class Main implements ActionListener {
   private static JLabel instructions;
